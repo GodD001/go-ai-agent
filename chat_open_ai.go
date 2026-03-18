@@ -39,7 +39,7 @@ func WithTools(tools []mcp.Tool) LLMOpition {
 	}
 }
 
-func newChatOpenAI(ctx context.Context, modelName string, opts ...LLMOpition) *ChatOpenAI {
+func NewChatOpenAI(ctx context.Context, modelName string, opts ...LLMOpition) *ChatOpenAI {
 	if modelName == "" {
 		panic("modelName is empty")
 	}
