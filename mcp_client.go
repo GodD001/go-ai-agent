@@ -2,6 +2,8 @@ package LLM_MCP_RAG
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	"github.com/mark3labs/mcp-go/client"
 	"github.com/mark3labs/mcp-go/client/transport"
@@ -70,8 +72,15 @@ func (m *MCPClient) CallTool(toolName string, args any) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return mcp.GetTextFromContent(res.Result), nil
-
+	parts := make([]string, 0, len(res.Content))
+	for _, c := range res.Content {
+		parts = append(parts, mcp.GetTextFromContent(c))
+	}
+	text := strings.Join(parts, "\n")
+	if res.IsError {
+		return "", fmt.Errorf("tool error: %s", text)
+	}
+	return text, nil
 }
 func (m *MCPClient) GetTools() []mcp.Tool {
 	return m.Tools
